@@ -1,0 +1,7 @@
+#!/usr/bin/perl
+
+use App::Sequence;
+
+App::Sequence->create_from_argv->run;
+
+1;

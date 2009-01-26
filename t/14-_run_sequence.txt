@@ -1,0 +1,24 @@
+use Test::More 'no_plan';
+use strict;
+use warnings;;
+use App::Sequence;
+
+sub a{
+    my ( $x, $y ) = @_;
+    return $x + $y;
+}
+
+
+{
+    my $ret = {};
+    my $conf = { a => 1, b => 2 };
+    my $sequence = [
+        { package => 'main', name => 'a', args => [ 'c.a', 'c.b' ], ret => 'r.a', },
+        { package => 'main', name => 'a', args => [ 'c.a', 'r.a' ], ret => 'r.b', }
+    ];
+    
+    $DB::single = 1;
+    App::Sequence::_run_sequence( $sequence, $conf, $ret );
+    is( $ret->{ b }, 4, '_run_function success' );
+}
+
