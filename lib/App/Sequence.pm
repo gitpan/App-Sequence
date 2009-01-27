@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.01_03';
+our $VERSION = '0.01_04';
 
 use Carp;
 use FindBin;
@@ -158,7 +158,13 @@ sub _parse_string_data{
 # rearrange @ARGV
 sub _rearrange_argv{
     my @argv = @_;
+
     my $rearranged_argv = { sequence_files => [], module_files => [], conf_files => [] };
+    
+    if( my $meta_file = _meta_file_contain( @argv ) ){
+        @argv = _parse_meta_file( $meta_file );
+    }
+    
     foreach my $arg ( @argv ){
         if( $arg =~ /\.as/ ){
             push @{ $rearranged_argv->{ sequence_files } }, $arg;
@@ -184,6 +190,39 @@ sub _rearrange_argv{
     
     return $rearranged_argv;
 }
+
+# whether array contain meta file( .meta )
+sub _meta_file_contain{
+    my @argv = @_;
+    my $meta_file = ( grep { /\.meta$/ } @argv )[0];
+    
+    carp "Only first meta file $meta_file is received. Other arguments is ignored."
+        if $meta_file && @argv != 1;
+    
+    return $meta_file;
+}
+
+# parse meta file, and convert @argv
+sub _parse_meta_file{
+    my $file = shift;
+    
+    open my $fh, "<", $file
+        or croak "Cannot open $file: $!";
+    my $content;
+    
+    {
+        local $/ = undef;
+        defined( $content = <$fh> ) or croak "Cannot read $file: $!";
+    }
+    
+    $content =~ s/\x0D\x0A|\x0D|\x0A/\n/g;
+    $content =~ s/#.*\n//g;
+    
+    my @argv = split /\s+/, $content;
+    
+    return @argv;
+}
+
 
 # parse .as file line
 sub _parse_func_expression{
@@ -307,9 +346,6 @@ sub _rearrange_conf{
         elsif( $conf =~ /\.csv$/ ){
             $rearranged_conf = _parse_csv( $conf );
         }
-        elsif( $conf =~ s/^argv\s+// ){
-            $rearranged_conf = _parse_argv( $conf );
-        }
         else{
             croak "$conf is unacceptable as conf setting";
         }
@@ -371,7 +407,7 @@ App::Sequence - useful plaggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.01_01
+Version 0.01_04
 
 =cut
 

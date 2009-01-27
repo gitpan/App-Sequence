@@ -1,4 +1,6 @@
-App-Sequence-0.01_03/t/05-_import_module/module2.pm
+aa
+aaa
+aaa:bbb
 App-Sequence-0.01_03/t/11-new.t
 bin/apseq
 bin/apseq.bat
@@ -23,6 +25,7 @@ t/05-_import_module.t
 t/05-_import_module/module1.pm
 t/05-_import_module/module2.pm
 t/06-_rearrange_argv.t
+t/06-_rearrange_argv/test1.meta
 t/07-_rearrange_sequence.t
 t/07-_rearrange_sequence/err_test1.as
 t/07-_rearrange_sequence/test1.as
@@ -54,6 +57,10 @@ t/15-run/module2.pm
 t/15-run/module3.pm
 t/15-run/test1.as
 t/15-run/test2.as
+t/16-_meta_file_contain.t
+t/17-_parse_meta_file.t
+t/17-_parse_meta_file/test1.meta
+t/17-_parse_meta_file/test1_win.meta
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t
