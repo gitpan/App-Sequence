@@ -14,7 +14,8 @@ my $builder = Module::Build->new(
         'YAML' => 0,
         'Text::CSV' => 0,
         'Config::Tiny' => 0,
-        'XML::Simple' => 0
+        'XML::Simple' => 0,
+        'Simo' => 0
     },
     add_to_cleanup      => [ 'App-Sequence-*' ],
     create_makefile_pl => 'traditional',

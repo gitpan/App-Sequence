@@ -2,7 +2,21 @@ use Test::More qw( no_plan );
 use strict;
 use warnings;
 
-BEGIN{ use_ok( 'App::Sequence' ); }
+BEGIN{
+    use_ok( 'YAML' );
+    use_ok( 'Text::CSV' );
+    use_ok( 'Config::Tiny' );
+    use_ok( 'XML::Simple' );
+    use_ok( 'Simo' );
+    
+    use_ok( 'App::Sequence' );
+}
+require_ok( 'YAML' );
+require_ok( 'Text::CSV' );
+require_ok( 'Config::Tiny' );
+require_ok( 'XML::Simple' );
+require_ok( 'Simo' );
+
 require_ok( 'App::Sequence' );
 
 can_ok( 'App::Sequence', 

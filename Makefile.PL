@@ -12,6 +12,7 @@ WriteMakefile
           'PREREQ_PM' => {
                            'Test::More' => 0,
                            'YAML' => 0,
+                           'Simo' => 0,
                            'XML::Simple' => 0,
                            'Text::CSV' => 0,
                            'Config::Tiny' => 0
