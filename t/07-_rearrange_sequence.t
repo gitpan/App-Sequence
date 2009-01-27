@@ -15,6 +15,17 @@ my $t_dir = 't/07-_rearrange_sequence';
              ], 'success pattern 1' );
 }
 
+
+{
+    my $files = [ "$t_dir/test1_win.as"];
+    my $sequences = App::Sequence::_rearrange_sequence( $files );
+    
+    is_deeply( $sequences, 
+             [ 
+               [{ package => 'main', name => 'a', args => [], ret => undef, }],
+             ], 'success pattern 1(windows return code' );
+}
+
 {
     my $files = [ "noexist" ];
     eval{ App::Sequence::_rearrange_sequence( $files ) };

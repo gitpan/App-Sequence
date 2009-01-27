@@ -1,5 +1,8 @@
+0.01_03
+    1. can read file which has windows return code( \x0D\x0A ) or Mac return code( \x0D )
+
 0.01_02
-    add test use_ok and require_ok
+    1. add test use_ok and require_ok
      
 0.01_01
     First developer version.

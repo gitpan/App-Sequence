@@ -14,6 +14,12 @@ my $t_dir = "t/08-_parse_csv";
 }
 
 {
+    my $file = "$t_dir/test1_win.csv";
+    my $conf = App::Sequence::_parse_csv( $file );
+    is_deeply( $conf, [{ name => 'kimoto', age => 1 },{ name => 'sirahama', age => 2 }], 'success pattern1(windows return code' );
+}
+
+{
     my $file = "$t_dir/test2.csv";
     my $conf = App::Sequence::_parse_csv( $file );
     is_deeply( $conf, [{ name => 'kimoto', age => 1 }], 'success pattern2 no last \n' );

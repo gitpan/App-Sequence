@@ -1,3 +1,5 @@
+App-Sequence-0.01_03/t/05-_import_module/module2.pm
+App-Sequence-0.01_03/t/11-new.t
 bin/apseq
 bin/apseq.bat
 Build.PL
@@ -24,10 +26,12 @@ t/06-_rearrange_argv.t
 t/07-_rearrange_sequence.t
 t/07-_rearrange_sequence/err_test1.as
 t/07-_rearrange_sequence/test1.as
+t/07-_rearrange_sequence/test1_win.as
 t/07-_rearrange_sequence/test2.as
 t/08-_parse_csv.t
 t/08-_parse_csv/err_test1.csv
 t/08-_parse_csv/test1.csv
+t/08-_parse_csv/test1_win.csv
 t/08-_parse_csv/test2.csv
 t/09-conf_files.t
 t/09-conf_files/conf.ini

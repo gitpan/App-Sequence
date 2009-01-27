@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.01_02';
+our $VERSION = '0.01_03';
 
 use Carp;
 use FindBin;
@@ -252,6 +252,10 @@ sub _rearrange_sequence{
         
         my $sequence = [];
         while( my $line = <$fh> ){
+            
+            $line =~ s/\x0D\x0A|\x0D|\x0A/\n/g;
+            chomp $line;
+            
             my $func_info = eval{ _parse_func_expression( $line ) };
             croak "$file line $. : $@" if( $@ );
             
@@ -331,8 +335,9 @@ sub _parse_csv{
     my @header;
     my $rearranged_confs = [];
     while( my $line = <$fh> ){
-        $line =~ s/\x0D\x0A/\n/g;
-        $line =~ tr/\x0D\x0A/\n\n/;
+        
+        $line =~ s/\x0D\x0A|\x0D|\x0A/\n/g;
+        chomp $line;
         
         next if $line =~ /^$/;
         
