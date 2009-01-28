@@ -1,7 +1,3 @@
-aa
-aaa
-aaa:bbb
-App-Sequence-0.01_03/t/11-new.t
 bin/apseq
 bin/apseq.bat
 Build.PL
@@ -61,6 +57,13 @@ t/16-_meta_file_contain.t
 t/17-_parse_meta_file.t
 t/17-_parse_meta_file/test1.meta
 t/17-_parse_meta_file/test1_win.meta
+t/18-apseq.t
+t/18-apseq/conf.csv
+t/18-apseq/module1.pm
+t/18-apseq/module2.pm
+t/18-apseq/test.meta
+t/18-apseq/test1.as
+t/18-apseq/test1.meta
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t

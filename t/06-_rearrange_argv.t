@@ -43,8 +43,8 @@ my $t_dir = 't/06-_rearrange_argv';
 {
     local @ARGV = ( "$t_dir/test1.meta" );
     my $argv = App::Sequence::_rearrange_argv( @ARGV );
-    is_deeply( $argv, { sequence_files => [ 'a.as' ],
-                        module_files => [ 'a.pm' ],
-                        conf_files => [ 'a.csv' ] },
+    is_deeply( $argv, { sequence_files => [ 't/06-_rearrange_argv/a.as' ],
+                        module_files => [ 't/06-_rearrange_argv/a.pm' ],
+                        conf_files => [ 't/06-_rearrange_argv/a.csv' ] },
                         'read meta file' );
 }

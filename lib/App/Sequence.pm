@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.01_04';
+our $VERSION = '0.01_05';
 
 use Carp;
 use FindBin;
@@ -220,6 +220,15 @@ sub _parse_meta_file{
     
     my @argv = split /\s+/, $content;
     
+    require File::Basename;
+    
+    my $dir = File::Basename::dirname( $file );
+    foreach my $arg ( @argv ){
+        if( $arg =~ /\.\w+$/ ){
+            $arg = $dir . '/' . $arg;
+        }
+    }
+    
     return @argv;
 }
 
@@ -407,7 +416,7 @@ App::Sequence - useful plaggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.01_04
+Version 0.01_05
 
 =cut
 
