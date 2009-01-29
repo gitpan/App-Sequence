@@ -1,5 +1,4 @@
 bin/apseq
-bin/apseq.bat
 Build.PL
 Changes
 lib/App/Sequence.pm

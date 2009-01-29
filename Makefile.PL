@@ -5,8 +5,7 @@ WriteMakefile
           'INSTALLDIRS' => 'site',
           'NAME' => 'App::Sequence',
           'EXE_FILES' => [
-                           'bin/apseq',
-                           'bin/apseq.bat'
+                           'bin/apseq'
                          ],
           'VERSION_FROM' => 'lib/App/Sequence.pm',
           'PREREQ_PM' => {
@@ -15,7 +14,8 @@ WriteMakefile
                            'Simo' => 0,
                            'XML::Simple' => 0,
                            'Text::CSV' => 0,
-                           'Config::Tiny' => 0
+                           'Config::Tiny' => 0,
+                           'IO::Capture' => 0
                          }
         )
 ;

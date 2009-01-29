@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.01_05';
+our $VERSION = '0.0201';
 
 use Carp;
 use FindBin;
@@ -46,8 +46,6 @@ sub argv{ ac default => [], filter => \&_to_array_ref }
 
 sub _to_array_ref{ ref eq 'ARRAY' ? $_ : [ $_ ] }
 
-
-
 ### method
 
 # new
@@ -88,7 +86,7 @@ sub _import_module{
     }
 }
 
-# run subroutine list registed by resist method
+# run all sequences
 sub run{
     my $self = shift;
     
@@ -100,6 +98,7 @@ sub run{
     }
 }
 
+# run each sequence
 sub _run_sequence{
     my ( $sequence, $conf, $ret ) = @_;
     foreach my $func_info ( @{ $sequence } ){
@@ -107,6 +106,7 @@ sub _run_sequence{
     }
 }
 
+# run each function 
 sub _run_function{
     my ( $func_info, $conf, $ret ) = @_;
     my $func_name = $func_info->{ package } . '::' . $func_info->{ name };
@@ -137,6 +137,7 @@ sub _run_function{
     }
 }
 
+# parse string data structure( c.name, c.age, etc )
 sub _parse_string_data{
     my ( $arg, $conf, $ret ) = @_;
     my $val;
@@ -232,7 +233,6 @@ sub _parse_meta_file{
     return @argv;
 }
 
-
 # parse .as file line
 sub _parse_func_expression{
     my $exp = shift;
@@ -290,6 +290,7 @@ sub _parse_func_expression{
     return $func_info;
 }
 
+# parse sequence file and convert to sequence data.
 sub _rearrange_sequence{
     my $files = shift;
     my $sequences = [];
@@ -314,6 +315,7 @@ sub _rearrange_sequence{
     return $sequences;
 }
 
+# parse many type config file, and convert hash ref.
 sub _rearrange_conf{
     my $conf = shift;
     
@@ -412,93 +414,267 @@ sub _parse_csv{
 
 =head1 NAME
 
-App::Sequence - useful plaggable subroutine engine.
+App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.01_05
+Version 0.0201
+
+This version is alpha version. It is experimental stage.
+I have many works yet( charctor set, error handling, log outputting, some bugs )
 
 =cut
 
 =head1 SYNOPSIS
 
-You use this module as the following,
+    apseq sequence.as module.pm config.csv
+    
+or
 
-    use App::Sequence;
+    apseq argument.meta
 
-    App::Sequence->create_from_argv->run;
+=head1 FEATURES
 
-But usually this module is used through apseq script.
+=over 4
 
-apseq script is installed with this module.
+=item 1. Your subroutines can be execute in any combination.
 
-It is better using apseq script than using this module by yourself.
+=item 2. Usage is very simple and flexible.
+
+=item 3. Config file is load automatically.
+
+=back
+
+=head1 Using apseq script
+
+When you install App::Sequence, apseq script is install at the same time.
+you can use apseq script on command line as the following way.
+
+    apseq sequence.as module.pm config.csv
+
+apseq script receive three type of files.
+
+=over 4
+
+=item 1. Sequence file( .as ), which contain subroutine names you want to execute.
+
+=item 2. Module file( .pm ), which contain subroutine definitions called by Sequence file.
+
+=item 3. Config file( .csv, .yml, .xml, .ini ), which contain data or setting.
+
+=back
+
+apseq script receive three type of file, and execute subroutines.
+
+=head1 Three type of file
+
+=head2 Sequence file
+
+=over 4
+
+Sequence file must be end with .as
+
+Sequence file format is
+
+    get_html( c.id, c.passwd ) : r.html
+    edit( r.html, c.encoding ) : stdout
+
+I assume that you want to get html file on the web and edit the html file by using an encoding
+and print STDOUT.
+
+you pass argumet to subroutine and save return value. and saved return value is used in next subroutine.
+
+=back
+
+=head2 Module file
+
+=over 4
+
+Module file must be end with .pm
+
+Module file is perl script that subroutine is defined.
+
+    sub get_html{
+        my ( $id, $passwd ) = @_;
+        my $html;
+        # ...
+        return $html;
+    }
+    
+    sub edit{
+        my ( $html, $encoding ) = @_;
+        my $output;
+        # ...
+        return $output;
+    }
+    1; # must be true value.
+
+Do not forget that last line must be true value.
+
+=back
+
+=head2 Config file
+
+Config file must be end with .csv, .yml, .xml, or .ini
+
+=over 4
+
+=item 1. CSV file( .csv )
+
+CSV file first line is header.
+
+CSV file format is
+
+    name,age
+    kimoto,29
+    ken,13
+
+This is converted to
+
+    [
+        { name => 'kimoto', age => '29' },
+        { name => 'ken', age => '13' }
+    ]
+
+This is used in Sequence file. c.name, c.age, etc.
+
+CSV file is useful to run same sequence repeatedly.This sample repeat sequence two times.
+
+=item 2. YAML file( .yml )
+
+YAML file is loaded by L<YAML>::LoadFile.
+
+YAML format is 
+
+    name: kimoto
+    age: 29
+    # last line is needed!
+    
+Do not forget that space is needed after colon( : ) and last line is need;
+
+This is converted to 
+    
+    { name => 'kimoto', age => '29' }
+
+This is used in Sequence file. c.name, c.age, etc.
+
+See also L<YAML>
+
+=item 3. XML file( .xml )
+
+XML file is loaded by L<XML::Simple>::XML
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <config>
+      <name>kimoto</name>
+      <age>29</age>
+    </config>
+
+/This is converted to
+
+    { name => 'kimoto', age => '29' }
+
+This is used in Sequence file. c.name, c.age, etc.
+
+=item 4. Windows ini file( .ini )
+
+Windows ini file is loaded by L<Config::Tiny>
+
+Windows ini format is
+
+    [person]
+    name=kimoto
+    age=29
+
+This is used in Sequence file. c.person.name, c.person.age, etc.
+
+See also L<Config::Tiny>
+
+=back
+
+=head1 Meta file( .meta )
+
+You can write argument of apseq in Meta file.
+
+Meta file must be end with .meta
+
+Meta file format is
+
+    sequence.as
+    module.pm
+    config.csv
+
+You can apseq script by passing Meta file.
+
+    apseq argumets.meta
 
 =head1 FUNCTIONS
 
+App::Sequence is used through apseq script. so I do not explain each method.
+
 =head2 argv
 
-todo
+no explaination
 
 =cut
 
 =head2 conf_files
 
-todo
+no explaination
 
 =cut
 
 =head2 confs
 
-todo
+no explaination
 
 =cut
 
 =head2 create_from_argv
 
-todo
+no explaination
 
 =cut
 
 =head2 module_files
 
-todo
+no explaination
 
 =cut
 
 =head2 new
 
-todo
+no explaination
 
 =cut
 
 =head2 r
 
-todo
+no explaination
 
 =cut
 
 =head2 run
 
-todo
+no explaination
 
 =cut
 
 =head2 sequence_files
 
-todo
+no explaination
 
 =cut
 
 =head2 sequences
 
-todo
+no explaination
 
 =cut
 
 =head1 AUTHOR
 
-Yuki, C<< <kimoto.yuki at gmail.com> >>
+Yuki Kimoto C<< <kimoto.yuki at gmail.com> >>
 
 =head1 BUGS
 
@@ -537,8 +713,9 @@ L<http://search.cpan.org/dist/App-Sequence/>
 =back
 
 
-=head1 ACKNOWLEDGEMENTS
+=head1 SEE ALSO
 
+L<Plugger>, L<YAML>, L<XML::Simple>, L<Config::Tiny>
 
 =head1 COPYRIGHT & LICENSE
 

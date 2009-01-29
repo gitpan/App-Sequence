@@ -9,6 +9,7 @@ my $builder = Module::Build->new(
     dist_version_from   => 'lib/App/Sequence.pm',
     build_requires => {
         'Test::More' => 0,
+        'IO::Capture' => 0
     },
     requires => {
         'YAML' => 0,
