@@ -7,7 +7,7 @@ my $t_dir = 't/07-_rearrange_sequence';
 
 {
     my $files = [ "$t_dir/test1.as", "$t_dir/test2.as" ];
-    my $sequences = App::Sequence::_rearrange_sequence( $files );
+    my $sequences = App::Sequence->_rearrange_sequence( $files );
     
     is_deeply( $sequences, 
              [ [{ package => 'main', name => 'a', args => [], ret => undef, }],
@@ -18,7 +18,7 @@ my $t_dir = 't/07-_rearrange_sequence';
 
 {
     my $files = [ "$t_dir/test1_win.as"];
-    my $sequences = App::Sequence::_rearrange_sequence( $files );
+    my $sequences = App::Sequence->_rearrange_sequence( $files );
     
     is_deeply( $sequences, 
              [ 
@@ -28,12 +28,12 @@ my $t_dir = 't/07-_rearrange_sequence';
 
 {
     my $files = [ "noexist" ];
-    eval{ App::Sequence::_rearrange_sequence( $files ) };
+    eval{ App::Sequence->_rearrange_sequence( $files ) };
     like( $@, qr/Cannot open noexist/, 'Cannot open file' );
 }
 
 {
     my $files = [ "$t_dir/err_test1.as" ];
-    eval{ App::Sequence::_rearrange_sequence( $files ) };
+    eval{ App::Sequence->_rearrange_sequence( $files ) };
     like( $@, qr#$t_dir/err_test1.as line 1#, 'parse error' )
 }

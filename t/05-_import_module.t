@@ -7,7 +7,7 @@ my $t_dir = 't/05-_import_module';
 {
     my $files = [ "$t_dir/module1.pm", "$t_dir/module2.pm" ];
     package AAA;
-    App::Sequence::_import_module( $files );
+    App::Sequence->_import_module( $files );
     
     package main;
     eval{ a() };

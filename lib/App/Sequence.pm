@@ -1,12 +1,12 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.0201';
+our $VERSION = '0.0202';
 
 use Carp;
 use FindBin;
 
-### accessors
+### accessors( by Simo )
 
 # config file list
 sub conf_files{ ac 
@@ -15,7 +15,7 @@ sub conf_files{ ac
     trigger => \&_update_confs
 }
 # trigger method when conf_file is set
-sub _update_confs{ $_->confs( _rearrange_conf( $_->conf_files ) ) }
+sub _update_confs{ $_->confs( $_->_rearrange_conf( $_->conf_files ) ) }
 
 # config list
 sub confs{ ac default => [], filter => \&_to_array_ref };
@@ -28,13 +28,17 @@ sub sequence_files{ ac
 }
 
 # trigger method when sequence_files is set
-sub _update_sequences{ $_->sequences( _rearrange_sequence( $_->sequence_files ) ) }
+sub _update_sequences{ $_->sequences( $_->_rearrange_sequence( $_->sequence_files ) ) }
 
 # sequence list
 sub sequences{ ac default => [], filter => \&_to_array_ref }
 
 # module file list
-sub module_files{ ac default => [], filter => \&_to_array_ref }
+sub module_files{ ac 
+    default => [],
+    filter => \&_to_array_ref,
+    trigger =>  sub{ $_->_import_module( $_->module_files ) }
+}
 
 # retrun value
 sub r{ ac default => {} }
@@ -42,39 +46,31 @@ sub r{ ac default => {} }
 # @ARGV
 sub argv{ ac default => [], filter => \&_to_array_ref }
 
-# callback run
-
+# convert to array ref
 sub _to_array_ref{ ref eq 'ARRAY' ? $_ : [ $_ ] }
+
 
 ### method
 
-# new
-sub new{
-    my $self = shift->SUPER::new( @_ );
-    
-    _import_module( $self->module_files );
-    return $self;
-}
+# new is automaticaly created by Simo
 
 # create object from @ARGV
 sub create_from_argv{
     my $self = shift->SUPER::new;
 
-    my $argv = _rearrange_argv( @ARGV );
+    my $argv = $self->_rearrange_argv( @ARGV );
     
     $self->conf_files( $argv->{ conf_files } );
     $self->sequence_files( $argv->{ sequence_files } );
     $self->module_files( $argv->{ module_files } );
-    
-    _import_module( $self->module_files );
     
     return $self;
 }
 
 # .pm files import
 sub _import_module{
-    my $module_files = shift;
-    my $self = shift;
+    my ( $self, $module_files ) = @_;
+
     use lib '.';
     
     foreach my $module_file ( @{ $module_files } ){
@@ -93,27 +89,27 @@ sub run{
     foreach my $conf ( @{ $self->confs } ){
         foreach my $sequence ( @{ $self->sequences } ){
             my $ret = {};
-            _run_sequence( $sequence, $conf, $ret );
+            $self->_run_sequence( $sequence, $conf, $ret );
         }
     }
 }
 
 # run each sequence
 sub _run_sequence{
-    my ( $sequence, $conf, $ret ) = @_;
+    my ( $self, $sequence, $conf, $ret ) = @_;
     foreach my $func_info ( @{ $sequence } ){
-        _run_function( $func_info, $conf, $ret );
+        $self->_run_function( $func_info, $conf, $ret );
     }
 }
 
 # run each function 
 sub _run_function{
-    my ( $func_info, $conf, $ret ) = @_;
+    my ( $self, $func_info, $conf, $ret ) = @_;
     my $func_name = $func_info->{ package } . '::' . $func_info->{ name };
     
     my @args;
     foreach my $arg ( @{ $func_info->{ args } } ){
-        my $val = _parse_string_data( $arg, $conf, $ret );
+        my $val = $self->_parse_string_data( $arg, $conf, $ret );
         push @args, $val;
         carp "$arg is undef value" if !defined( $val );
     }
@@ -139,7 +135,7 @@ sub _run_function{
 
 # parse string data structure( c.name, c.age, etc )
 sub _parse_string_data{
-    my ( $arg, $conf, $ret ) = @_;
+    my ( $self, $arg, $conf, $ret ) = @_;
     my $val;
     if( $arg =~ s/^c\.// ){
         my @keys = split /\./, $arg;
@@ -158,12 +154,12 @@ sub _parse_string_data{
 
 # rearrange @ARGV
 sub _rearrange_argv{
-    my @argv = @_;
+    my ( $self, @argv ) = @_;
 
     my $rearranged_argv = { sequence_files => [], module_files => [], conf_files => [] };
     
-    if( my $meta_file = _meta_file_contain( @argv ) ){
-        @argv = _parse_meta_file( $meta_file );
+    if( my $meta_file = $self->_meta_file_contain( @argv ) ){
+        @argv = $self->_parse_meta_file( $meta_file );
     }
     
     foreach my $arg ( @argv ){
@@ -194,7 +190,7 @@ sub _rearrange_argv{
 
 # whether array contain meta file( .meta )
 sub _meta_file_contain{
-    my @argv = @_;
+    my ( $self, @argv ) = @_;
     my $meta_file = ( grep { /\.meta$/ } @argv )[0];
     
     carp "Only first meta file $meta_file is received. Other arguments is ignored."
@@ -205,7 +201,7 @@ sub _meta_file_contain{
 
 # parse meta file, and convert @argv
 sub _parse_meta_file{
-    my $file = shift;
+    my ( $self, $file ) = @_;
     
     open my $fh, "<", $file
         or croak "Cannot open $file: $!";
@@ -235,7 +231,7 @@ sub _parse_meta_file{
 
 # parse .as file line
 sub _parse_func_expression{
-    my $exp = shift;
+    my ( $self, $exp ) = @_;
     my $original_exp = $exp;
     
     my $func_info = { package => 'main', name => undef, args => [], ret => undef };
@@ -292,7 +288,7 @@ sub _parse_func_expression{
 
 # parse sequence file and convert to sequence data.
 sub _rearrange_sequence{
-    my $files = shift;
+    my ( $self, $files ) = @_;
     my $sequences = [];
     
     foreach my $file ( @{ $files } ){
@@ -305,7 +301,7 @@ sub _rearrange_sequence{
             $line =~ s/\x0D\x0A|\x0D|\x0A/\n/g;
             chomp $line;
             
-            my $func_info = eval{ _parse_func_expression( $line ) };
+            my $func_info = eval{ $self->_parse_func_expression( $line ) };
             croak "$file line $. : $@" if( $@ );
             
             push @{ $sequence }, $func_info;
@@ -317,7 +313,7 @@ sub _rearrange_sequence{
 
 # parse many type config file, and convert hash ref.
 sub _rearrange_conf{
-    my $conf = shift;
+    my ( $self, $conf ) = @_;
     
     # convert array ref
     my $confs = ref $conf eq 'ARRAY' ? $conf : [ $conf ];
@@ -355,7 +351,7 @@ sub _rearrange_conf{
             %{ $rearranged_conf } = %{ $tiny_obj };
         }
         elsif( $conf =~ /\.csv$/ ){
-            $rearranged_conf = _parse_csv( $conf );
+            $rearranged_conf = $self->_parse_csv( $conf );
         }
         else{
             croak "$conf is unacceptable as conf setting";
@@ -371,7 +367,7 @@ sub _rearrange_conf{
 
 # csv file arrange
 sub _parse_csv{
-    my $conf = shift;
+    my ( $self, $conf ) = @_;
     require Text::CSV;
     my $parser = Text::CSV->new({ binary => 1 });
     

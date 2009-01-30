@@ -18,7 +18,7 @@ sub a{
         { package => 'main', name => 'a', args => [ 'c.a', 'r.a' ], ret => 'r.b', }
     ];
     
-    App::Sequence::_run_sequence( $sequence, $conf, $ret );
+    App::Sequence->_run_sequence( $sequence, $conf, $ret );
     is( $ret->{ b }, 4, '_run_sequence success' );
 }
 
@@ -31,7 +31,7 @@ sub a{
     ];
     my $capture = IO::Capture::Stdout->new;
     $capture->start;
-    App::Sequence::_run_sequence( $sequence, $conf, $ret );
+    App::Sequence->_run_sequence( $sequence, $conf, $ret );
     $capture->stop;
     my $stdout = $capture->read;
     
