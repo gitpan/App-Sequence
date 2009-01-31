@@ -1,4 +1,7 @@
-0.0202 
+0.0203
+    bag fix. supress warning when ret is not specified
+
+0.0202
     referctering. convert functions to methods
 0.0201
     alpha release

@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.0202';
+our $VERSION = '0.0203';
 
 use Carp;
 use FindBin;
@@ -114,8 +114,8 @@ sub _run_function{
         carp "$arg is undef value" if !defined( $val );
     }
     
-    my $ret_key;
-    if( $func_info->{ ret } =~ /^r\.(.+)/ ){
+    my $ret_key = $func_info->{ ret };
+    if( $ret_key && $ret_key =~ /^r\.(.+)/ ){
         $ret_key = $1;
     }
     
@@ -123,12 +123,11 @@ sub _run_function{
         no strict 'refs';
         my $ret_val = $func_name->( @args );
         
-        if( $ret_key ){
-            $ret->{ $ret_key } = $ret_val;
-        }
-        
-        if( $func_info->{ ret } =~ /^stdout$/ ){
+        if( $ret_key && $ret_key =~ /^stdout$/ ){
             print "$ret_val";
+        }
+        elsif( $ret_key ){
+            $ret->{ $ret_key } = $ret_val;
         }
     }
 }
