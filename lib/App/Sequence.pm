@@ -1,10 +1,9 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.0203';
+our $VERSION = '0.0205';
 
 use Carp;
-use FindBin;
 
 ### accessors( by Simo )
 
@@ -413,7 +412,7 @@ App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.0201
+Version 0.0205
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

@@ -1,3 +1,6 @@
+0.0204
+    delete use FindBin;
+
 0.0203
     bag fix. supress warning when ret is not specified
 

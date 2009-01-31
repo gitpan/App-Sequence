@@ -1,6 +1,6 @@
 ---
 name: App-Sequence
-version: 0.0203
+version: 0.0205
 author:
   - 'Yuki <kimoto.yuki@gmail.com>'
 abstract: pluggable subroutine engine.
@@ -19,7 +19,7 @@ build_requires:
 provides:
   App::Sequence:
     file: lib/App/Sequence.pm
-    version: 0.0203
+    version: 0.0205
 generated_by: Module::Build version 0.31
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
