@@ -28,7 +28,7 @@ my $t_dir = "t/08-_parse_csv";
 {
     my $file = "noexist";
     eval{ App::Sequence->_parse_csv( $file ) };
-    like( $@, qr/Cannnot open/, 'not exist file' );
+    like( $@, qr/Cannot open/, 'not exist file' );
 }
 
 {

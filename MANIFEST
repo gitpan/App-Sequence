@@ -46,6 +46,8 @@ t/14-_run_sequence.t
 t/14-_run_sequence.txt
 t/15-run.t
 t/15-run/conf.csv
+t/15-run/conf.json
+t/15-run/conf.yaml
 t/15-run/conf.yml
 t/15-run/module1.pm
 t/15-run/module2.pm
@@ -63,6 +65,8 @@ t/18-apseq/module2.pm
 t/18-apseq/test.meta
 t/18-apseq/test1.as
 t/18-apseq/test1.meta
+t/19-_parse_json.t
+t/19-_parse_json/test1.json
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t

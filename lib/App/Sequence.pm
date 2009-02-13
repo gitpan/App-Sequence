@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.0205';
+our $VERSION = '0.0206';
 
 use Carp;
 
@@ -170,17 +170,18 @@ sub _rearrange_argv{
         elsif( $arg =~ /\.csv$/ ||
                $arg =~ /\.ya?ml$/ ||
                $arg =~ /\.xml$/ ||
-               $arg =~ /\.ini$/ )
+               $arg =~ /\.ini$/ ||
+               $arg =~ /\.json$/ )
         {
             push @{ $rearranged_argv->{ conf_files } }, $arg;
         }
         else{
-            croak "'$arg' is invalid param. param must be in ( .as .pm .csv .yaml .yml .xml .ini )";
+            croak "'$arg' is invalid param. param must be in ( .as .pm .csv .yaml .yml .xml .ini .json )";
         }
     }
     
     croak ".as file must be passed" unless @{ $rearranged_argv->{ sequence_files } };
-    croak "config file( .csv .yaml .yml .xml .ini ) must be passed"
+    croak "config file( .csv .yaml .yml .xml .ini .json ) must be passed"
         unless @{ $rearranged_argv->{ conf_files } };
     
     return $rearranged_argv;
@@ -332,7 +333,7 @@ sub _rearrange_conf{
             };
             croak $@ if $@;
         }
-        elsif( $conf =~ /\.yml$/ ){
+        elsif( $conf =~ /\.ya?ml$/ ){
             require YAML;
             eval{
                 $rearranged_conf = YAML::LoadFile( $conf );
@@ -350,6 +351,9 @@ sub _rearrange_conf{
         }
         elsif( $conf =~ /\.csv$/ ){
             $rearranged_conf = $self->_parse_csv( $conf );
+        }
+        elsif( $conf =~ /\.json$/ ){
+            $rearranged_conf = $self->_parse_json( $conf );
         }
         else{
             croak "$conf is unacceptable as conf setting";
@@ -370,7 +374,7 @@ sub _parse_csv{
     my $parser = Text::CSV->new({ binary => 1 });
     
     open my $fh, "<", $conf
-        or croak "Cannnot open $conf: $!";
+        or croak "Cannot open $conf: $!";
     
     my $is_first_line = 1;
     my @header;
@@ -406,13 +410,29 @@ sub _parse_csv{
     return $rearranged_confs;
 }
 
+sub _parse_json{
+    my ( $self, $conf ) = @_;
+    require JSON;
+    open my $fh, "<", $conf
+        or croak "Cannot open $conf: $!";
+    
+    my $content = do{ local $/; <$fh> }
+        or croak "Cannot read $conf: $!";
+    
+    $DB::single = 1;
+    my $rearranged_conf = JSON::decode_json( $content );
+    
+    close $fh;
+    return $rearranged_conf;
+}
+
 =head1 NAME
 
 App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.0205
+Version 0.0206
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
@@ -459,6 +479,8 @@ apseq script receive three type of files.
 =back
 
 apseq script receive three type of file, and execute subroutines.
+
+File must be written by utf8.
 
 =head1 Three type of file
 

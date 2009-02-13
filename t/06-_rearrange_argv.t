@@ -20,7 +20,7 @@ my $t_dir = 't/06-_rearrange_argv';
         eval{ App::Sequence->_rearrange_argv( @ARGV ) };
     }
     like( $@,
-          qr/'a\.iii' is invalid param\. param must be in \( \.as \.pm \.csv \.yaml \.yml \.xml \.ini \)/, 
+          qr/'a\.iii' is invalid param\. param must be in \( \.as \.pm \.csv \.yaml \.yml \.xml \.ini \.json \)/, 
           'invalid param' );
 }
 
@@ -37,7 +37,7 @@ my $t_dir = 't/06-_rearrange_argv';
     {
         eval{ App::Sequence->_rearrange_argv( @ARGV ) };
     }
-    like( $@, qr/config file\( \.csv \.yaml \.yml \.xml \.ini \) must be passed/, 'config file not passed' );
+    like( $@, qr/config file\( \.csv \.yaml \.yml \.xml \.ini \.json \) must be passed/, 'config file not passed' );
 }
 
 {

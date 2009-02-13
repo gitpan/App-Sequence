@@ -41,3 +41,39 @@ my $t_dir = 't/15-run';
                            '{b{a34}3}', '{c{b34}3}',
                            '{b{a56}5}', '{c{b56}5}' ], 'success pattern1' );
 }
+
+{
+    local @ARGV = ( 
+        "$t_dir/conf.json",
+        "$t_dir/module1.pm", "$t_dir/module2.pm",
+        "$t_dir/test1.as",
+    );
+    
+    my $as = App::Sequence->create_from_argv;
+    
+    my $capture = IO::Capture::Stdout->new;
+    $capture->start;
+    $as->run;
+    $capture->stop;
+    
+    my @stdout = $capture->read;
+    is_deeply( [@stdout], ['{b{a56}5}'], 'success pattern1' );
+}
+
+{
+    local @ARGV = ( 
+        "$t_dir/conf.yaml",
+        "$t_dir/module1.pm", "$t_dir/module2.pm",
+        "$t_dir/test1.as",
+    );
+    
+    my $as = App::Sequence->create_from_argv;
+    
+    my $capture = IO::Capture::Stdout->new;
+    $capture->start;
+    $as->run;
+    $capture->stop;
+    
+    my @stdout = $capture->read;
+    is_deeply( [@stdout], ['{b{a56}5}'], 'success pattern1' );
+}

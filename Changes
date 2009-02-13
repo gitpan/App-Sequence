@@ -1,4 +1,7 @@
-0.0204
+0.0206
+    can parse json
+
+0.0205
     delete use FindBin;
 
 0.0203
