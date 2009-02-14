@@ -70,6 +70,11 @@ t/19-_parse_json.t
 t/19-_parse_json/test1.json
 t/19-_parse_json/test2_shift-jis.json
 t/19-_parse_json/test3_utf8.json
+t/20-_parse_xml.t
+t/20-_parse_xml/test1.xml
+t/20-_parse_xml/test2_shift-jis.xml
+t/20-_parse_xml/test3_utf8.xml
+t/20-_parse_xml/test4_parse_error.xml
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t

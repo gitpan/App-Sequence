@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.03_01';
+our $VERSION = '0.03_02';
 
 use Carp;
 use Encode;
@@ -327,12 +327,7 @@ sub _rearrange_conf{
             $rearranged_conf = [ $conf ];
         }
         elsif( $conf =~ /\.xml$/ ){
-            require XML::Simple;
-            my $parser = XML::Simple->new;
-            eval{
-                $rearranged_conf =  $parser->XMLin( $conf );
-            };
-            croak $@ if $@;
+            $rearranged_conf = $self->_parse_xml( $conf );
         }
         elsif( $conf =~ /\.ya?ml$/ ){
             require YAML;
@@ -411,11 +406,25 @@ sub _parse_csv{
     return $rearranged_confs;
 }
 
+sub _parse_xml{
+    my ( $self, $conf ) = @_;
+    
+    require XML::Simple;
+    my $parser = XML::Simple->new;
+    my $rearranged_conf;
+    
+    croak "File '$conf' not exists" unless -f $conf;
+    
+    eval{ $rearranged_conf =  $parser->XMLin( $conf ) };
+    croak "File '$conf': $@" if $@;
+    
+    return $rearranged_conf;
+}
+
 sub _parse_json{
     my ( $self, $conf, $charset ) = @_;
     $charset ||= 'utf8';
     
-    require JSON;
     open my $fh, "<", $conf
         or croak "Cannot open $conf: $!";
     
@@ -424,6 +433,7 @@ sub _parse_json{
     
     $content = decode( $charset, $content );
     
+    require JSON;
     my $rearranged_conf = JSON::from_json( $content );
     
     close $fh;
@@ -436,7 +446,7 @@ App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.03_01
+Version 0.03_02
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
