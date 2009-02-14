@@ -5,8 +5,7 @@ WriteMakefile
           'INSTALLDIRS' => 'site',
           'NAME' => 'App::Sequence',
           'EXE_FILES' => [
-                           'bin/apseq',
-                           'bin/コピー ～ apseq'
+                           'bin/apseq'
                          ],
           'VERSION_FROM' => 'lib/App/Sequence.pm',
           'PREREQ_PM' => {

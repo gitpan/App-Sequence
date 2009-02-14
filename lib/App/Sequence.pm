@@ -1,14 +1,15 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.0206';
+our $VERSION = '0.03_01';
 
 use Carp;
+use Encode;
 
 ### accessors( by Simo )
 
 # config file list
-sub conf_files{ ac 
+sub conf_files{ ac
     default => [],
     filter => \&_to_array_ref,
     trigger => \&_update_confs
@@ -369,7 +370,7 @@ sub _rearrange_conf{
 
 # csv file arrange
 sub _parse_csv{
-    my ( $self, $conf ) = @_;
+    my ( $self, $conf, $charset ) = @_;
     require Text::CSV;
     my $parser = Text::CSV->new({ binary => 1 });
     
@@ -411,7 +412,9 @@ sub _parse_csv{
 }
 
 sub _parse_json{
-    my ( $self, $conf ) = @_;
+    my ( $self, $conf, $charset ) = @_;
+    $charset ||= 'utf8';
+    
     require JSON;
     open my $fh, "<", $conf
         or croak "Cannot open $conf: $!";
@@ -419,8 +422,9 @@ sub _parse_json{
     my $content = do{ local $/; <$fh> }
         or croak "Cannot read $conf: $!";
     
-    $DB::single = 1;
-    my $rearranged_conf = JSON::decode_json( $content );
+    $content = decode( $charset, $content );
+    
+    my $rearranged_conf = JSON::from_json( $content );
     
     close $fh;
     return $rearranged_conf;
@@ -432,7 +436,7 @@ App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.0206
+Version 0.03_01
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

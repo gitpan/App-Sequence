@@ -4,6 +4,7 @@ Changes
 lib/App/Sequence.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST_bak
 META.yml
 README
 t/00-load.t
@@ -67,6 +68,8 @@ t/18-apseq/test1.as
 t/18-apseq/test1.meta
 t/19-_parse_json.t
 t/19-_parse_json/test1.json
+t/19-_parse_json/test2_shift-jis.json
+t/19-_parse_json/test3_utf8.json
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t
