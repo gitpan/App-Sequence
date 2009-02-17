@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.03_02';
+our $VERSION = '0.03_03';
 
 use Carp;
 use Encode;
@@ -340,7 +340,7 @@ sub _rearrange_conf{
             require Config::Tiny;
             my $ct = Config::Tiny->new;
             my $tiny_obj = $ct->read( $conf );
-
+            
             croak $ct->errstr unless $tiny_obj;
             $rearranged_conf = {};
             %{ $rearranged_conf } = %{ $tiny_obj };
@@ -366,25 +366,28 @@ sub _rearrange_conf{
 # csv file arrange
 sub _parse_csv{
     my ( $self, $conf, $charset ) = @_;
-    require Text::CSV;
-    my $parser = Text::CSV->new({ binary => 1 });
+    $charset ||= 'utf8';
     
     open my $fh, "<", $conf
         or croak "Cannot open $conf: $!";
+    
+    require Text::CSV;
+    # my $parser = Text::CSV->new({ binary => 1 });
+    my $parser = Text::CSV->new;
     
     my $is_first_line = 1;
     my @header;
     my $rearranged_confs = [];
     while( my $line = <$fh> ){
+        $line = decode( 'utf8', $line );
         
         $line =~ s/\x0D\x0A|\x0D|\x0A/\n/g;
         chomp $line;
         
         next if $line =~ /^$/;
         
-        $line =~ s/(\r|\n)//g;
         $parser->parse( $line );
-
+        
         if( !$parser->status ){
             croak $parser->error_diag . ': ' . $parser->error_input;
         }
@@ -403,6 +406,8 @@ sub _parse_csv{
             push @{ $rearranged_confs }, $rearranged_conf;
         }
     }
+    close $fh;
+    
     return $rearranged_confs;
 }
 
@@ -446,7 +451,7 @@ App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.03_02
+Version 0.03_03
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

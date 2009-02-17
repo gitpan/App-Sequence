@@ -22,7 +22,8 @@ my $t_dir = "t/20-_parse_xml";
     no utf8;
 }
 
-{
+SKIP:{
+    skip "Windows only", 1 if $^O ne 'MSWin32';
     my $file = "$t_dir/test2_shift-jis.xml";
     my $conf = App::Sequence->_parse_xml( $file, 'shift-jis' );
     

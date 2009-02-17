@@ -1,3 +1,5 @@
+0.03_03
+    shift-jis xml parse skip on not Windows platfrom
 0.03_02
     Error message do friendly when parsing xml
     
