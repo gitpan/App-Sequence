@@ -1,6 +1,6 @@
 ---
 name: App-Sequence
-version: 0.03_03
+version: 0.03_04
 author:
   - 'Yuki <kimoto.yuki@gmail.com>'
 abstract: pluggable subroutine engine.
@@ -9,7 +9,7 @@ resources:
   license: ~
 requires:
   Config::Tiny: 0
-  JSON: 0
+  JSON: 2
   Simo: 0
   Text::CSV: 0
   XML::Simple: 0
@@ -20,7 +20,7 @@ build_requires:
 provides:
   App::Sequence:
     file: lib/App/Sequence.pm
-    version: 0.03_03
+    version: 0.03_04
 generated_by: Module::Build version 0.31012
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

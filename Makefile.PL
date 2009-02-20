@@ -14,7 +14,7 @@ WriteMakefile
                            'Simo' => 0,
                            'XML::Simple' => 0,
                            'Text::CSV' => 0,
-                           'JSON' => 0,
+                           'JSON' => 2,
                            'Config::Tiny' => 0,
                            'IO::Capture' => 0
                          }
