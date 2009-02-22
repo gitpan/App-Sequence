@@ -1,5 +1,7 @@
+0.03_05
+    Build.PL add requires Encode => 0
 0.03_04
-   Build.PL add required JSON => 2
+    Build.PL add requires JSON => 2
    
 0.03_03
     shift-jis xml parse skip on not Windows platfrom

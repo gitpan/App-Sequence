@@ -17,7 +17,8 @@ my $builder = Module::Build->new(
         'Config::Tiny' => 0,
         'XML::Simple' => 0,
         'Simo' => 0,
-        'JSON' => 2
+        'JSON' => 2,
+        'Encode' => 0
     },
     add_to_cleanup      => [ 'App-Sequence-*' ],
     create_makefile_pl => 'traditional',

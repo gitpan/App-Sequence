@@ -9,11 +9,12 @@ WriteMakefile
                          ],
           'VERSION_FROM' => 'lib/App/Sequence.pm',
           'PREREQ_PM' => {
-                           'Test::More' => 0,
                            'YAML' => 0,
-                           'Simo' => 0,
                            'XML::Simple' => 0,
                            'Text::CSV' => 0,
+                           'Encode' => 0,
+                           'Test::More' => 0,
+                           'Simo' => 0,
                            'JSON' => 2,
                            'Config::Tiny' => 0,
                            'IO::Capture' => 0
