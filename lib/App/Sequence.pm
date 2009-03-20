@@ -1,7 +1,7 @@
 package App::Sequence;
 use Simo;
 
-our $VERSION = '0.03_05';
+our $VERSION = '0.0401';
 
 use Carp;
 use Encode;
@@ -451,7 +451,7 @@ App::Sequence - pluggable subroutine engine.
 
 =head1 VERSION
 
-Version 0.03_05
+Version 0.0401
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

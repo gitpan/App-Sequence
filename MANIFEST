@@ -44,7 +44,6 @@ t/12-create_from_argv/module1.pm
 t/12-create_from_argv/test1.as
 t/13-_run_function.t
 t/14-_run_sequence.t
-t/14-_run_sequence.txt
 t/15-run.t
 t/15-run/conf.csv
 t/15-run/conf.json
