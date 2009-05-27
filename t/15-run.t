@@ -6,13 +6,13 @@ use warnings;
 use App::Sequence;
 my $t_dir = 't/15-run';
 {
-    local @ARGV = ( 
+    my @args = ( 
         "$t_dir/conf.csv",
         "$t_dir/module1.pm", "$t_dir/module2.pm",
         "$t_dir/test1.as",
     );
     
-    my $as = App::Sequence->create_from_argv;
+    my $as = App::Sequence->create_from_argv(@args);
     
     my $capture = IO::Capture::Stdout->new;
     $capture->start;
@@ -24,13 +24,13 @@ my $t_dir = 't/15-run';
 }
 
 {
-    local @ARGV = ( 
+    my @args = ( 
         "$t_dir/conf.csv", "$t_dir/conf.yml",
         "$t_dir/module1.pm", "$t_dir/module2.pm", "$t_dir/module3.pm",
         "$t_dir/test1.as", "$t_dir/test2.as"
     );
     
-    my $as = App::Sequence->create_from_argv;
+    my $as = App::Sequence->create_from_argv(@args);
     
     my $capture = IO::Capture::Stdout->new;
     $capture->start;
@@ -43,13 +43,13 @@ my $t_dir = 't/15-run';
 }
 
 {
-    local @ARGV = ( 
+    my @args = ( 
         "$t_dir/conf.json",
         "$t_dir/module1.pm", "$t_dir/module2.pm",
         "$t_dir/test1.as",
     );
     
-    my $as = App::Sequence->create_from_argv;
+    my $as = App::Sequence->create_from_argv(@args);
     
     my $capture = IO::Capture::Stdout->new;
     $capture->start;
@@ -61,13 +61,13 @@ my $t_dir = 't/15-run';
 }
 
 {
-    local @ARGV = ( 
+    my @args = ( 
         "$t_dir/conf.yaml",
         "$t_dir/module1.pm", "$t_dir/module2.pm",
         "$t_dir/test1.as",
     );
     
-    my $as = App::Sequence->create_from_argv;
+    my $as = App::Sequence->create_from_argv(@args);
     
     my $capture = IO::Capture::Stdout->new;
     $capture->start;

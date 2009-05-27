@@ -2,6 +2,6 @@
 
 use App::Sequence;
 
-App::Sequence->create_from_argv->run;
+App::Sequence->create_from_argv(@ARGV)->run;
 
 1;

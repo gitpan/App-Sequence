@@ -5,6 +5,7 @@ use App::Sequence;
 
 my $t_dir = 't/11-new';
 {
+    
     my $as = App::Sequence->new(
         module_files => [ "$t_dir/module1.pm" ]
     );
@@ -14,5 +15,5 @@ my $t_dir = 't/11-new';
         package main;
         a();
     };
-    if( $@ ){ fail 'import module' }
+    ok(!$@, 'import module' );
 }

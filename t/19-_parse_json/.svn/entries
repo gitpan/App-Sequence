@@ -1,0 +1,55 @@
+8
+
+dir
+27
+file:///usr/local/svn/App-Sequence/trunk/t/19-_parse_json
+file:///usr/local/svn/App-Sequence
+
+
+
+2009-02-13T13:45:10.781284Z
+27
+root
+
+
+svn:special svn:externals svn:needs-lock
+
+test3_utf8.json
+file
+28
+
+
+
+2009-02-14T07:59:04.000000Z
+60a361c6856bfa77f8ebf2d62c2d72d5
+2009-02-14T08:06:40.034360Z
+28
+root
+has-props
+
+test1.json
+file
+
+
+
+
+2009-02-13T12:58:53.000000Z
+4a0fbc39deb56cd4c767ce8893052425
+2009-02-13T13:45:10.781284Z
+27
+root
+has-props
+
+test2_shift-jis.json
+file
+28
+
+
+
+2009-02-14T07:56:02.000000Z
+6220ec01902c4ea094b881719b105bc4
+2009-02-14T08:06:40.034360Z
+28
+root
+has-props
+

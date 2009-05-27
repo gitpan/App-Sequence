@@ -1,68 +1,47 @@
 package App::Sequence;
-use Simo;
+use Object::Simple;
 
-our $VERSION = '0.0401';
+our $VERSION = '0.0501';
 
 use Carp;
 use Encode;
 
-### accessors( by Simo )
+sub conf_files : Attr {default => [],type => 'ArrayRef'}
+sub confs      : Attr {default => [],type => 'ArrayRef'};
 
-# config file list
-sub conf_files{ ac
-    default => [],
-    filter => \&_to_array_ref,
-    trigger => \&_update_confs
-}
-# trigger method when conf_file is set
-sub _update_confs{ $_->confs( $_->_rearrange_conf( $_->conf_files ) ) }
+sub sequence_files : Attr {default => [],type => 'ArrayRef'}
+sub sequences      : Attr {default => [],type => 'ArrayRef'}
 
-# config list
-sub confs{ ac default => [], filter => \&_to_array_ref };
-
-# sequence file list
-sub sequence_files{ ac 
-    default => [],
-    filter => \&_to_array_ref,
-    trigger => \&_update_sequences
-}
-
-# trigger method when sequence_files is set
-sub _update_sequences{ $_->sequences( $_->_rearrange_sequence( $_->sequence_files ) ) }
-
-# sequence list
-sub sequences{ ac default => [], filter => \&_to_array_ref }
-
-# module file list
-sub module_files{ ac 
-    default => [],
-    filter => \&_to_array_ref,
-    trigger =>  sub{ $_->_import_module( $_->module_files ) }
-}
-
-# retrun value
-sub r{ ac default => {} }
-
-# @ARGV
-sub argv{ ac default => [], filter => \&_to_array_ref }
-
-# convert to array ref
-sub _to_array_ref{ ref eq 'ARRAY' ? $_ : [ $_ ] }
+sub module_files : Attr {default => [],type => 'ArrayRef'}
+sub r            : Attr {default => {}}
+sub argv         : Attr {default => []}
 
 
 ### method
-
-# new is automaticaly created by Simo
+sub _init {
+    my ($self, $args)= @_;
+    
+    $self->confs($self->_rearrange_conf($self->conf_files))
+      unless @{$self->confs};
+    
+    $self->sequences($self->_rearrange_sequence($self->sequence_files))
+      unless @{$self->sequences};
+    $DB::single = 1;
+    
+    $self->_import_module( $self->module_files )
+}
 
 # create object from @ARGV
 sub create_from_argv{
-    my $self = shift->SUPER::new;
-
-    my $argv = $self->_rearrange_argv( @ARGV );
+    my ($self, @args) = @_;
+    $DB::single = 1;
+    my $argv = $self->_rearrange_argv( @args );
     
-    $self->conf_files( $argv->{ conf_files } );
-    $self->sequence_files( $argv->{ sequence_files } );
-    $self->module_files( $argv->{ module_files } );
+    $self = $self->SUPER::new(
+        conf_files => $argv->{ conf_files },
+        sequence_files => $argv->{ sequence_files },
+        module_files => $argv->{ module_files }
+    );
     
     return $self;
 }
@@ -445,13 +424,15 @@ sub _parse_json{
     return $rearranged_conf;
 }
 
+Object::Simple->end;
+
 =head1 NAME
 
-App::Sequence - pluggable subroutine engine.
+App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0401
+Version 0.0501
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

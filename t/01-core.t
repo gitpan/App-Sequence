@@ -36,11 +36,9 @@ can_ok( 'App::Sequence',
         r
         argv
         
-        _update_confs
         conf_files
                 
         sequence_files
-        _update_sequences
 
         new
         run
@@ -61,8 +59,6 @@ can_ok( 'App::Sequence',
     foreach my $ac ( @accessors  ){
         no strict 'refs';
         is_deeply( $as->$ac, [], "default $ac" );
-        $as->$ac( 1 );
-        is_deeply( $as->$ac, [1], "accossor $ac scalar" );
         $as->$ac( [2] );
         is_deeply( $as->$ac, [2], "accossor $ac array_ref" );
     }
