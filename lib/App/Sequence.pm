@@ -1,7 +1,7 @@
 package App::Sequence;
 use Object::Simple;
 
-our $VERSION = '0.0501';
+our $VERSION = '0.0502';
 
 use Carp;
 use Encode;
@@ -16,17 +16,33 @@ sub module_files : Attr {default => [],type => 'ArrayRef'}
 sub r            : Attr {default => {}}
 sub argv         : Attr {default => []}
 
+sub meta_file : Attr {}
+sub directory : Attr {}
 
 ### method
 sub _init {
     my ($self, $args)= @_;
+    
+    if(my $meta_file = $self->meta_file) {
+        my $files = $self->_parse_meta_file($meta_file);
+        
+        $self->conf_files($files->{conf_files});
+        $self->sequence_files($files->{sequence_files});
+        $self->module_files($files->{module_files});
+    }
+    elsif(my $directory = $self->directory) {
+        my $files = $self->_parse_directory($directory);
+        
+        $self->conf_files($files->{conf_files});
+        $self->sequence_files($files->{sequence_files});
+        $self->module_files($files->{module_files});
+    }
     
     $self->confs($self->_rearrange_conf($self->conf_files))
       unless @{$self->confs};
     
     $self->sequences($self->_rearrange_sequence($self->sequence_files))
       unless @{$self->sequences};
-    $DB::single = 1;
     
     $self->_import_module( $self->module_files )
 }
@@ -34,14 +50,9 @@ sub _init {
 # create object from @ARGV
 sub create_from_argv{
     my ($self, @args) = @_;
-    $DB::single = 1;
     my $argv = $self->_rearrange_argv( @args );
     
-    $self = $self->SUPER::new(
-        conf_files => $argv->{ conf_files },
-        sequence_files => $argv->{ sequence_files },
-        module_files => $argv->{ module_files }
-    );
+    $self = $self->SUPER::new($argv);
     
     return $self;
 }
@@ -130,30 +141,37 @@ sub _parse_string_data{
     return $val;
 }
 
+sub _is_sequence_file {
+    return $_[1] =~ /\.as/;
+}
+
+sub _is_module_file {
+    return $_[1] =~ /\.pm/;
+}
+
+sub _is_conf_file {
+    return $_[1] =~ /\.csv$/   ||
+           $_[1] =~ /\.ya?ml$/ ||
+           $_[1] =~ /\.xml$/   ||
+           $_[1] =~ /\.ini$/   ||
+           $_[1] =~ /\.json$/;
+}
+
 # rearrange @ARGV
 sub _rearrange_argv{
     my ( $self, @argv ) = @_;
 
     my $rearranged_argv = { sequence_files => [], module_files => [], conf_files => [] };
     
-    if( my $meta_file = $self->_meta_file_contain( @argv ) ){
-        @argv = $self->_parse_meta_file( $meta_file );
-    }
-    
     foreach my $arg ( @argv ){
-        if( $arg =~ /\.as/ ){
-            push @{ $rearranged_argv->{ sequence_files } }, $arg;
+        if($self->_is_sequence_file($arg)) {
+            push @{$rearranged_argv->{sequence_files}}, $arg;
         }
-        elsif( $arg =~ /\.pm/ ){
-            push @{ $rearranged_argv->{ module_files } }, $arg;
+        elsif($self->_is_module_file($arg)) {
+            push @{$rearranged_argv->{module_files}}, $arg;
         }
-        elsif( $arg =~ /\.csv$/ ||
-               $arg =~ /\.ya?ml$/ ||
-               $arg =~ /\.xml$/ ||
-               $arg =~ /\.ini$/ ||
-               $arg =~ /\.json$/ )
-        {
-            push @{ $rearranged_argv->{ conf_files } }, $arg;
+        elsif($self->_is_conf_file($arg)) {
+            push @{$rearranged_argv->{conf_files}}, $arg;
         }
         else{
             croak "'$arg' is invalid param. param must be in ( .as .pm .csv .yaml .yml .xml .ini .json )";
@@ -167,20 +185,9 @@ sub _rearrange_argv{
     return $rearranged_argv;
 }
 
-# whether array contain meta file( .meta )
-sub _meta_file_contain{
-    my ( $self, @argv ) = @_;
-    my $meta_file = ( grep { /\.meta$/ } @argv )[0];
-    
-    carp "Only first meta file $meta_file is received. Other arguments is ignored."
-        if $meta_file && @argv != 1;
-    
-    return $meta_file;
-}
-
 # parse meta file, and convert @argv
 sub _parse_meta_file{
-    my ( $self, $file ) = @_;
+    my ($self, $file) = @_;
     
     open my $fh, "<", $file
         or croak "Cannot open $file: $!";
@@ -205,7 +212,33 @@ sub _parse_meta_file{
         }
     }
     
-    return @argv;
+    my $args = $self->_rearrange_argv(@argv);
+    return $args;
+}
+
+sub _parse_directory {
+    my ($self, $directory) = @_;
+    
+    my @files = do{
+        opendir my $dh, $directory
+          or die "Cannot open $directory: $!";
+        my @files;
+        while(my $file = readdir $dh) {
+            if($self->_is_sequence_file($file) ||
+               $self->_is_conf_file($file)     ||
+               $self->_is_module_file($file))
+            {
+                push @files, $file;
+            }
+        }
+        @files;
+    };
+    
+    require File::Spec;
+    @files = map {File::Spec->catfile($directory, $_)} @files;
+    
+    my $args = $self->_rearrange_argv(@files);
+    return $args;
 }
 
 # parse .as file line
@@ -432,7 +465,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0501
+Version 0.0502
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
@@ -687,6 +720,14 @@ no explaination
 no explaination
 
 =cut
+
+=head2 directory
+
+target directory
+
+=head2 meta_file
+
+meta file
 
 =head1 AUTHOR
 

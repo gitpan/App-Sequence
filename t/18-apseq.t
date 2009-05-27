@@ -3,8 +3,6 @@ use strict;
 use warnings;
 use File::Spec;
 
-#use IO::Capture;
-
 my $t_dir = "t/18-apseq";
 my $script = File::Spec->catfile( 'blib', 'script', 'apseq' );
 
@@ -16,6 +14,12 @@ my $script = File::Spec->catfile( 'blib', 'script', 'apseq' );
 
 {
     my $command = "$script $t_dir/test1.meta";
+    my $stdout = `$command`;
+    is( $stdout, "{b{a12}1}{b{a34}3}", 'success pattern' );
+}
+
+{
+    my $command = "$script $t_dir";
     my $stdout = `$command`;
     is( $stdout, "{b{a12}1}{b{a34}3}", 'success pattern' );
 }

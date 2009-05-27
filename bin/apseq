@@ -1,7 +1,35 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
 
 use App::Sequence;
 
-App::Sequence->create_from_argv(@ARGV)->run;
+my $meta_files = [];
+my $directories = [];
+my $others = [];
+
+foreach my $arg (@ARGV) {
+    if(-d $arg) {
+        push @$directories, $arg;
+    }
+    elsif($arg =~ /\.meta$/) {
+        push @$meta_files, $arg;
+    }
+    else {
+        push @$others, $arg;
+    }
+}
+
+foreach my $meta_file (@$meta_files) {
+    App::Sequence->new(meta_file => $meta_file)->run;
+}
+
+foreach my $directory (@$directories) {
+    App::Sequence->new(directory => $directory)->run;
+}
+
+if(@$others) {
+    App::Sequence->create_from_argv(@$others)->run;
+}
 
 1;
