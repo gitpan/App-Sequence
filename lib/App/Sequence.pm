@@ -1,11 +1,12 @@
 package App::Sequence;
 use Object::Simple;
 
-our $VERSION = '0.0502';
+our $VERSION = '0.0503';
 
 use Carp;
 use Encode;
 
+# attribute
 sub conf_files : Attr {default => [],type => 'ArrayRef'}
 sub confs      : Attr {default => [],type => 'ArrayRef'};
 
@@ -20,8 +21,8 @@ sub meta_file : Attr {}
 sub directory : Attr {}
 
 ### method
-sub _init {
-    my ($self, $args)= @_;
+sub new {
+    my $self = shift->SUPER::new(@_);
     
     if(my $meta_file = $self->meta_file) {
         my $files = $self->_parse_meta_file($meta_file);
@@ -44,7 +45,9 @@ sub _init {
     $self->sequences($self->_rearrange_sequence($self->sequence_files))
       unless @{$self->sequences};
     
-    $self->_import_module( $self->module_files )
+    $self->_import_module( $self->module_files );
+    
+    return $self;
 }
 
 # create object from @ARGV
@@ -52,7 +55,7 @@ sub create_from_argv{
     my ($self, @args) = @_;
     my $argv = $self->_rearrange_argv( @args );
     
-    $self = $self->SUPER::new($argv);
+    $self = $self->new($argv);
     
     return $self;
 }
@@ -465,7 +468,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0502
+Version 0.0503
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
