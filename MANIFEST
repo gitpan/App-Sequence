@@ -74,13 +74,11 @@ t/08-_parse_csv/err_test1.csv
 t/08-_parse_csv/test1.csv
 t/08-_parse_csv/test1_win.csv
 t/08-_parse_csv/test2.csv
-t/09-conf_files.t
 t/09-conf_files/.svn/entries
 t/09-conf_files/.svn/format
 t/09-conf_files/.svn/prop-base/conf.ini.svn-base
 t/09-conf_files/.svn/text-base/conf.ini.svn-base
 t/09-conf_files/conf.ini
-t/10-sequence_files.t
 t/10-sequence_files/.svn/entries
 t/10-sequence_files/.svn/format
 t/10-sequence_files/.svn/prop-base/test1.as.svn-base

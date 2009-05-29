@@ -1,21 +1,21 @@
 package App::Sequence;
 use Object::Simple;
 
-our $VERSION = '0.0503';
+our $VERSION = '0.0504';
 
 use Carp;
 use Encode;
 
 # attribute
-sub conf_files : Attr {default => [],type => 'ArrayRef'}
-sub confs      : Attr {default => [],type => 'ArrayRef'};
+sub conf_files : Attr { default => sub{[]} }
+sub confs      : Attr { default => sub{[]} };
 
-sub sequence_files : Attr {default => [],type => 'ArrayRef'}
-sub sequences      : Attr {default => [],type => 'ArrayRef'}
+sub sequence_files : Attr { default => sub{[]} }
+sub sequences      : Attr { default => sub{[]} }
 
-sub module_files : Attr {default => [],type => 'ArrayRef'}
-sub r            : Attr {default => {}}
-sub argv         : Attr {default => []}
+sub module_files : Attr { default => sub{[]} }
+sub r            : Attr { default => sub{{}} }
+sub argv         : Attr { default => sub{[]} }
 
 sub meta_file : Attr {}
 sub directory : Attr {}
@@ -468,7 +468,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0503
+Version 0.0504
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
