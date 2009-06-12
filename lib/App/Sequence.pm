@@ -1,7 +1,7 @@
 package App::Sequence;
 use Object::Simple;
 
-our $VERSION = '0.0504';
+our $VERSION = '0.0505';
 
 use Carp;
 use Encode;
@@ -460,7 +460,7 @@ sub _parse_json{
     return $rearranged_conf;
 }
 
-Object::Simple->end;
+Object::Simple->build_class;
 
 =head1 NAME
 
@@ -468,7 +468,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0504
+Version 0.0505
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )

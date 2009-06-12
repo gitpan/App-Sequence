@@ -16,7 +16,7 @@ my $builder = Module::Build->new(
         'Text::CSV' => 0,
         'Config::Tiny' => 0,
         'XML::Simple' => 0,
-        'Object::Simple' => 0.0203,
+        'Object::Simple' => 2.0003,
         'JSON' => 2,
         'Encode' => 0
     },
