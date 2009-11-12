@@ -1,7 +1,7 @@
 package App::Sequence;
 use Object::Simple;
 
-our $VERSION = '0.0505';
+our $VERSION = '0.0506';
 
 use Carp;
 use Encode;
@@ -468,7 +468,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0505
+Version 0.0506
 
 This version is alpha version. It is experimental stage.
 I have many works yet( charctor set, error handling, log outputting, some bugs )
