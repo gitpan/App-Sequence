@@ -14,7 +14,7 @@ WriteMakefile
                            'Text::CSV' => 0,
                            'Encode' => 0,
                            'Test::More' => 0,
-                           'Object::Simple' => '2.0003',
+                           'Object::Simple' => '2.1301',
                            'JSON' => 2,
                            'Config::Tiny' => 0,
                            'IO::Capture' => 0

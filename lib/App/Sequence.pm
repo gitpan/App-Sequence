@@ -1,25 +1,21 @@
 package App::Sequence;
-use Object::Simple;
+use base 'Object::Simple::Base';
 
-our $VERSION = '0.0506';
+our $VERSION = '0.0507';
 
-use Carp;
-use Encode;
+use strict;
+use warnings;
+
+use Carp qw/croak carp/;
+use Encode qw/decode/;
 
 # attribute
-sub conf_files : Attr { default => sub{[]} }
-sub confs      : Attr { default => sub{[]} };
+__PACKAGE__->attr([qw/conf_files confs/]         => sub{ [] });
+__PACKAGE__->attr([qw/sequence_files sequences/] => sub{ [] });
+__PACKAGE__->attr([qw/module_files argv/]        => sub{ [] });
+__PACKAGE__->attr(r => sub { {} });
 
-sub sequence_files : Attr { default => sub{[]} }
-sub sequences      : Attr { default => sub{[]} }
-
-sub module_files : Attr { default => sub{[]} }
-sub r            : Attr { default => sub{{}} }
-sub argv         : Attr { default => sub{[]} }
-
-sub meta_file : Attr {}
-sub directory : Attr {}
-
+__PACKAGE__->attr([qw/meta_file directory/]);
 ### method
 sub new {
     my $self = shift->SUPER::new(@_);
@@ -68,7 +64,6 @@ sub _import_module{
     
     foreach my $module_file ( @{ $module_files } ){
         package main;
-        require Carp;
         
         require $module_file;
         Carp::croak "$module_file is not exist" if $@;
@@ -460,20 +455,13 @@ sub _parse_json{
     return $rearranged_conf;
 }
 
-Object::Simple->build_class;
-
 =head1 NAME
 
 App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0506
-
-This version is alpha version. It is experimental stage.
-I have many works yet( charctor set, error handling, log outputting, some bugs )
-
-=cut
+Version 0.0507
 
 =head1 SYNOPSIS
 
