@@ -1,7 +1,7 @@
 package App::Sequence;
-use base 'Object::Simple::Base';
+use base 'Object::Simple';
 
-our $VERSION = '0.0507';
+our $VERSION = '0.0508';
 
 use strict;
 use warnings;
@@ -461,7 +461,7 @@ App::Sequence - subroutine engine
 
 =head1 VERSION
 
-Version 0.0507
+Version 0.0508
 
 =head1 SYNOPSIS
 
